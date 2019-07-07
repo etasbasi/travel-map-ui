@@ -9,14 +9,18 @@ export default function UserDetails(props = {}) {
       <UserAvatar />
       <div className="user-name-age">
         <span className="user-username">{ username }</span>
-        <span className="seperator">, </span>
-        <span className="user-age">{ age }</span>
+
       </div>
-      <div className="user-location">
-        <span className="city">{ city }</span>
-        <span className="seperator">, </span>
-        <span className="country">{ country }</span>
-      </div>
+      {city && country ?
+        <div className="user-location">
+          <span className="city">{ city }</span>
+          <span className="seperator">, </span>
+          <span className="country">{ country }</span>
+        </div>
+        :
+        <p>No current residence was provided</p>
+      }
+     
     </div>
   );
 }

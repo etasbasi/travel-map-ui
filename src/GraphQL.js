@@ -26,6 +26,10 @@ export const GET_LOGGEDIN_USER = gql`
     getLoggedInUser {
       id
       username
+      Place_living {
+        city
+        country
+      }
     }
   }
 `;
