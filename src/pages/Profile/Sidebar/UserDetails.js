@@ -18,7 +18,7 @@ export default function UserDetails(props = {}) {
           <span className="country">{ country }</span>
         </div>
         :
-        <p>No current residence was provided!</p>
+        <p>No current residence was provided</p>
       }
      
     </div>
