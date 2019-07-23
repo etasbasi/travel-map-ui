@@ -13,7 +13,7 @@ import CityIcon from "../../../icons/CityIcon";
 import { countryConsts } from "../../../CountryConsts";
 
 function ClickedCountryContainer(props) {
-  const [page, handlePage] = useState(0);
+  const [page, handlePage] = useState(1);
   const [countryIndex, handleCountryIndex] = useState(0);
   const [cityCount, handleCityCount] = useState(0);
   const [timing, handleTiming] = useState(0);
@@ -30,9 +30,13 @@ function ClickedCountryContainer(props) {
   function handlePageChange(page) {
     handlePage(page);
   }
-  function handleTypedCity() {
+  function handleTypedCity(type) {
     let cityCountNew = cityCount;
-    cityCountNew++;
+    if (type) {
+      cityCountNew++;
+    } else {
+      cityCountNew--;
+    }
     handleCityCount(cityCountNew);
   }
   function handleTripTiming(timing) {

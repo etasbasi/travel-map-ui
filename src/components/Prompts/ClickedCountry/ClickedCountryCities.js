@@ -6,6 +6,7 @@ import Geocoder from "react-map-gl-geocoder";
 import { Mutation } from "react-apollo";
 import { ADD_PLACE_VISITING } from "../../../GraphQL";
 import { countryConsts } from "../../../CountryConsts";
+import TrashIcon from "../../../icons/TrashIcon";
 
 class ClickedCountryCities extends Component {
   constructor(props) {
@@ -19,13 +20,15 @@ class ClickedCountryCities extends Component {
         zoom: countryConsts[this.props.countryIndex].zoom
       },
       markerDisplay: null,
-      markerIndex:  null,
-      cities: [{
-        city: "",
-        cityId: 0,
-        city_latitude: 0,
-        city_longitude: 0
-      }],
+      markerIndex: null,
+      cities: [
+        {
+          city: "",
+          cityId: 0,
+          city_latitude: 0,
+          city_longitude: 0
+        }
+      ],
       country: {
         country: this.props.country,
         countryId: this.props.countryId,
@@ -43,6 +46,7 @@ class ClickedCountryCities extends Component {
     this._onWebGLInitialized = this._onWebGLInitialized.bind(this);
     this.handleNewMarkers = this.handleNewMarkers.bind(this);
     this._renderPopup = this._renderPopup.bind(this);
+    this.deleteCity = this.deleteCity.bind(this);
   }
 
   componentDidMount() {
@@ -103,15 +107,15 @@ class ClickedCountryCities extends Component {
     });
   }
 
-  handleNewMarkers(markers) {
+  handleNewMarkers(markers, type) {
     let markerDisplay = markers.map((city, i) => {
       return (
         <Marker
           key={city.cityId}
           offsetLeft={-5}
           offsetTop={-10}
-          latitude={city.city_latitude/1000000}
-          longitude={city.city_longitude/1000000}
+          latitude={city.city_latitude / 1000000}
+          longitude={city.city_longitude / 1000000}
           captureClick={false}
         >
           <svg
@@ -122,7 +126,9 @@ class ClickedCountryCities extends Component {
             xmlns="http://www.w3.org/2000/svg"
           >
             <circle
-              onMouseOver={() => this.setState({ cityTooltip: city, markerIndex: i })}
+              onMouseOver={() =>
+                this.setState({ cityTooltip: city, markerIndex: i })
+              }
               key={"circle" + city.cityId}
               cx="50"
               cy="50"
@@ -136,7 +142,7 @@ class ClickedCountryCities extends Component {
     this.setState({
       markerDisplay: markerDisplay
     });
-    this.props.handleTypedCity();
+    (type) ? this.props.handleTypedCity(1) : this.props.handleTypedCity(0);
   }
 
   handleOnResult(event) {
@@ -151,7 +157,7 @@ class ClickedCountryCities extends Component {
     this.setState({
       cities
     });
-    this.handleNewMarkers(cities);
+    this.handleNewMarkers(cities, 1);
   }
 
   _onWebGLInitialized(gl) {
@@ -163,11 +169,12 @@ class ClickedCountryCities extends Component {
     return (
       cityTooltip && (
         <Popup
+          key={cityTooltip.cityId}
           className="city-map-tooltip"
           tipSize={5}
           anchor="top"
-          longitude={cityTooltip.city_longitude/1000000}
-          latitude={cityTooltip.city_latitude/1000000}
+          longitude={cityTooltip.city_longitude / 1000000}
+          latitude={cityTooltip.city_latitude / 1000000}
           closeOnClick={false}
           style={{
             background: "rgba(115, 167, 195, 0.75)",
@@ -175,13 +182,32 @@ class ClickedCountryCities extends Component {
           }}
         >
           {cityTooltip.city}
+          <TrashIcon
+            cityKey={cityTooltip.cityId}
+            trashClicked={this.deleteCity}
+          />
         </Popup>
       )
     );
   }
 
+  deleteCity(cityId) {
+    let cities = this.state.cities;
+    let cityIndex = null;
+    cities.find((city, i) => {
+      if (city.cityId === cityId) {
+        cityIndex = i;
+        return true;
+      }
+    });
+    cities.splice(cityIndex, 1);
+    this.setState({ cities, cityTooltip: null });
+    this.handleNewMarkers(cities, 0);
+  }
+
   render() {
     const { viewport, markerDisplay, country, cities, style } = this.state;
+    console.log(cities);
     console.log(viewport);
     return (
       <div className="city-choosing-container">
