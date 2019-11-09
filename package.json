@@ -32,7 +32,8 @@
     "sweetalert2": "^8.12.1"
   },
   "scripts": {
-    "start": "react-scripts build && node server.js",
+    "postinstall": "npm run build",
+    "start": "node server.js",
     "dev": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
