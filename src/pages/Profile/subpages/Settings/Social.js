@@ -83,7 +83,7 @@ export default function Contact({
             <>
               <span className="icon">{getIcon(item)}</span>
               <input
-                onChange={(e) => handleInput(e.target.value, index)}
+                onChange={e => handleInput(e.target.value, index)}
                 placeholder="Include `https`"
                 className="input"
                 value={userSocials[index].url}
@@ -97,7 +97,9 @@ export default function Contact({
             <a target="__blank" className="media" href={item.link}>
               <span className="icon">{getIcon(item)}</span>
             </a>
-          ) : null}
+          ) : (
+            <span className="empty icon">{getIcon(item)}</span>
+          )}
         </div>
       ))}
 
@@ -107,7 +109,7 @@ export default function Contact({
           variables={{ userSocials }}
           onCompleted={handleDataSave}
         >
-          {(mutation) =>
+          {mutation =>
             edit ? (
               <span className="large confirm button" onClick={mutation}>
                 Update

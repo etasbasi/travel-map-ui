@@ -12,13 +12,20 @@ const genderOptions = [
   "transgender male"
 ];
 
+function changeDateFormat(dateString) {
+  let date = new Date(dateString);
+  let newDate = `${date.getMonth() + 1}/${date.getDate() +
+    1}/${date.getFullYear()}`;
+  return newDate;
+}
+
 export default function Basics({
   userData,
   handleUserDataChange,
   urlUsername
 }) {
   const [edit, handleEdit] = useState(false);
-  const [userBasics, handleUserBasicChange] = useState({});
+  const [userBasics, setUserBasics] = useState({});
   const [errors, setErrors] = useState({
     full_name: "",
     phone_number: ""
@@ -28,16 +35,16 @@ export default function Basics({
     let userBasicInfo = {
       full_name: userData.full_name,
       phone_number: userData.phone_number,
-      birthday: userData.birthday,
+      birthday: changeDateFormat(userData.birthday),
       gender: userData.gender
     };
-    handleUserBasicChange(userBasicInfo);
+    setUserBasics(userBasicInfo);
   }, [userData]);
 
   function handleInput(e) {
     let userBasicInfo = userBasics;
     userBasicInfo[e.target.id] = e.target.value;
-    handleUserBasicChange(userBasicInfo);
+    setUserBasics(userBasicInfo);
   }
   function handleEditButton() {
     let editState = edit;
@@ -48,7 +55,7 @@ export default function Basics({
     newUserData.full_name = userBasics.full_name;
     newUserData.phone_number = userBasics.phone_number;
     newUserData.gender = userBasics.gender;
-    newUserData.birthday = userBasics.birthday;
+    newUserData.birthday = changeDateFormat(userBasics.birthday);
     handleUserDataChange(newUserData);
   }
 
@@ -80,7 +87,13 @@ export default function Basics({
         )}
       </div>
 
-      {!edit && phone_number === "" ? null : !edit && phone_number !== "" ? (
+      {!edit && (phone_number === "" || phone_number === null) ? (
+        <div className="input-container">
+          <span className="input-header empty">
+            Phone Number - Not Provided
+          </span>
+        </div>
+      ) : !edit && phone_number !== "" ? (
         <div className="input-container">
           <span className="input-header">Phone Number</span>
           <span className="placeholder">{phone_number}</span>
@@ -100,7 +113,11 @@ export default function Basics({
           )}
         </div>
       ) : null}
-      {!edit && gender === "" ? null : !edit && gender !== "" ? (
+      {!edit && (gender === "" || gender === null) ? (
+        <div className="input-container">
+          <span className="input-header empty">Gender - Not Provided</span>
+        </div>
+      ) : !edit && gender !== "" ? (
         <div className="input-container">
           <span className="input-header">Gender</span>
           <span className="placeholder">{gender}</span>
@@ -114,7 +131,7 @@ export default function Basics({
             defaultValue={userBasics.gender}
             onChange={handleInput}
           >
-            {genderOptions.map((option) => {
+            {genderOptions.map(option => {
               return (
                 <option value={option} key={option}>
                   {option}
@@ -124,7 +141,11 @@ export default function Basics({
           </select>
         </div>
       ) : null}
-      {!edit && birthday === "" ? null : !edit && birthday !== "" ? (
+      {!edit && (birthday === "" || birthday === null) ? (
+        <div className="input-container">
+          <span className="input-header empty">Birthday - Not Provided</span>
+        </div>
+      ) : !edit && birthday !== "" ? (
         <div className="input-container">
           <span className="input-header">Birthday</span>
           <span className="placeholder">{birthday}</span>
@@ -136,7 +157,7 @@ export default function Basics({
             type="date"
             id="birthday"
             className="input"
-            defaultValue={birthday}
+            value={birthday}
             onChange={handleInput}
           />
         </div>
@@ -148,7 +169,7 @@ export default function Basics({
           onCompleted={handleDataSave}
           onInputError={onInputError}
         >
-          {(mutation) =>
+          {mutation =>
             edit ? (
               <span className="large confirm button" onClick={mutation}>
                 Update

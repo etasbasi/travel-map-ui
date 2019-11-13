@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import _ from "lodash";
 import CountryResult from "./CountryResult";
 import AllTimingsIcon from "../../../../icons/AllTimingsIcon";
@@ -57,8 +57,6 @@ export default function Trips({ user }) {
 
   const [results, setResults] = useState(fakeresults);
   const [filterState, setFilterState] = useState("");
-
-  useEffect(() => console.log(user), [user]);
 
   function filter(state) {
     setFilterState(state);

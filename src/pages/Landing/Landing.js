@@ -136,9 +136,6 @@ class Landing extends Component {
             <span className="landing-yellow-bar" />
           </div>
         </div>
-        {/* <div className="landing-form-container">
-          <LandingForm handleUserLogin={() => this.props.handleUserLogin(1)} />
-        </div> */}
       </div>
     );
   }
